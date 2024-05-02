@@ -1,27 +1,27 @@
 // 型定義
 // 都道府県（都道府県名、都道府県コード）
-export type prefecture = {
+export type Prefecture = {
   prefCode: number; // 都道府県コード
   prefName: string; // 都道府県名
 };
 // 年ごとの値
-export type yearValue = {
+export type YearValue = {
   year: number; // 年
   value: number; // 値
 };
 // 人口構成のデータ
-export type prefPopulationData = {
+export type PrefPopulationData = {
   prefCode: number; // 都道府県コード
   prefName: string; // 都道府県名
   data: {
-    all: yearValue[]; // 総人口
-    child: yearValue[]; // 年少人口
-    working: yearValue[]; // 生産年齢人口
-    old: yearValue[]; // 老年人口
+    all: YearValue[]; // 総人口
+    child: YearValue[]; // 年少人口
+    working: YearValue[]; // 生産年齢人口
+    old: YearValue[]; // 老年人口
   };
 };
 // 人口構成APIのレスポンス（RESAS API準拠）
-export type prefPopulationAPIResponse = {
+export type PrefPopulationAPIResponse = {
   message: any;
   result: {
     boundaryYear: number;
