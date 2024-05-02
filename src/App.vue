@@ -1,56 +1,59 @@
 <template>
   <div class="responsive-wrapper">
     <!--ページタイトル-->
-    <div class="label">
-      <h1>Japan Population charts</h1>
-      <p>都道府県を人口で比較してみよう</p>
-    </div>
-    <!--表示モード選択-->
-    <div class="tabs">
-      <div
-        v-for="(modeName, mode) in { all: '総人口', child: '年少人口', working: '生産年齢人口', old: '老年人口' }"
-        :key="mode"
-        class="tab"
-        :class="{ 'is-selected': state.mode === mode }"
-        @click="state.mode = mode"
-      >
-        {{ modeName }}
+    <div class="text-center">
+      <div class="label">
+        <h1>Japan Population Charts</h1>
+        <p>都道府県を人口で比較してみよう</p>
       </div>
     </div>
-    <!--グラフ-->
-    <Chart
-      :size="{ width: chartState.width, height: 300 }"
-      :data="chartState.data"
-      :margin="chartState.margin"
-      :direction="chartState.direction"
-      :axis="chartState.axis"
-    >
-      <template #layers>
-        <Grid stroke-dasharray="2,2" />
-        <Line :data-keys="['name', 'pl']" />
-        <Line :data-keys="['name', 'avg']" :line-style="{ stroke: 'red' }" type="step" />
-      </template>
-
-      <template #widgets>
-        <Tooltip
-          border-color="#48CAE4"
-          :config="{
-            name: { hide: true },
-            pl: { color: '#0077b6' },
-            avg: { label: 'averange', color: 'red' },
-            inc: { hide: true },
-          }"
-        />
-      </template>
-    </Chart>
-
     <!--読込中-->
     <div v-if="state.isLoading" class="text-center"><img src="/loading.svg" class="loading-icon" /> <br />データを取得中</div>
-    <div v-else>
+    <div v-else class="main">
+      <!--表示モード選択-->
+      <div class="tabs">
+        <div
+          v-for="(modeName, mode) in { all: '総人口', child: '年少人口', working: '生産年齢人口', old: '老年人口' }"
+          :key="mode"
+          class="tab"
+          :class="{ 'is-selected': state.mode === mode }"
+          @click="state.mode = mode"
+        >
+          {{ modeName }}
+        </div>
+      </div>
+      <!--グラフ-->
+      <Chart
+        :size="{ width: chartState.width, height: 300 }"
+        :data="chartState.data"
+        :margin="chartState.margin"
+        :direction="chartState.direction"
+        :axis="chartState.axis"
+      >
+        <template #layers>
+          <Grid stroke-dasharray="2,2" />
+          <Line :data-keys="['name', 'pl']" />
+          <Line :data-keys="['name', 'avg']" :line-style="{ stroke: 'red' }" type="step" />
+        </template>
+
+        <template #widgets>
+          <Tooltip
+            border-color="#48CAE4"
+            :config="{
+              name: { hide: true },
+              pl: { color: '#0077b6' },
+              avg: { label: 'averange', color: 'red' },
+              inc: { hide: true },
+            }"
+          />
+        </template>
+      </Chart>
       <div class="label">
-        <h2>Select Prefectures</h2>
+        <h2>都道府県の選択</h2>
         <p>グラフに表示する都道府県を選んでください</p>
       </div>
+
+      <!--都道府県の選択-->
       <div v-if="state.prefectures.length > 0" class="grid-4">
         <div v-for="pref in state.prefectures" :key="pref.prefCode" class="row-2">
           <label>
@@ -60,7 +63,6 @@
         </div>
       </div>
     </div>
-    <!--都道府県の選択-->
   </div>
 </template>
 <script setup lang="ts">
@@ -70,7 +72,8 @@ import { Chart, Grid, Line, Tooltip } from 'vue3-charts';
 import { ChartAxis, Direction } from 'vue3-charts/dist/types';
 
 // APIキー
-const RESAS_API_KEY = 'p4ZVGTtYIiI25gVj2CfIFdpq1wMCkmOiWPQ1jchy';
+// 事前にプロジェクトルートに .env.local ファイルを作成の上、RESAS_API_KEY="(APIキー)"の形式でAPIキーを設定しておくこと。
+const RESAS_API_KEY = import.meta.env.RESAS_API_KEY;
 
 // 画面の状態
 const state = reactive({

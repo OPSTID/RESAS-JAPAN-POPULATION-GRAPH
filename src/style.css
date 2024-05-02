@@ -52,7 +52,6 @@ div.grid-4 {
 /* タブ */
 div.tabs {
   display: flex;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
   background: #edf0f3;
   padding: 3px 10px;
   border-radius: 8px;
@@ -104,9 +103,9 @@ input[type='checkbox']::after {
   position: absolute;
   top: 5px;
   left: 8px;
-  transform: rotate(50deg);
+  transform: rotate(40deg);
   width: 4px;
-  height: 8px;
+  height: 9px;
   border-right: 2px dotted #ccc;
   border-bottom: 2px dotted #ccc;
   content: '';
@@ -123,4 +122,18 @@ input[type='checkbox']:checked::after {
 .loading-icon {
   margin-top: 50px;
   width: 32px;
+}
+/*読み込み完了後アニメーション*/
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+.main {
+  animation: slideIn 0.3s;
 }
