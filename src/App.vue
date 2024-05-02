@@ -23,19 +23,32 @@
         </div>
       </div>
       <!--グラフ-->
-      <Chart :options="chartState.charOptions"></Chart>
-      <div class="label">
-        <h2>都道府県の選択</h2>
-        <p>グラフに表示する都道府県を選んでください</p>
+      <div v-if="state.selectedPrefsCodes.length > 0" class="card-inset">
+        <Chart :options="chartState.charOptions"></Chart>
       </div>
-
+      <div v-else class="card-inset text-center">
+        <div class="label">
+          <h1>🤔</h1>
+        </div>
+        <br />
+        <div class="label">
+          <h2>都道府県を選択してください</h2>
+          <p>人口推移グラフを表示するには1つ以上の都道府県を選択する必要があります</p>
+        </div>
+      </div>
       <!--都道府県の選択-->
-      <div v-if="state.prefs.length > 0" class="grid-4">
-        <div v-for="pref in state.prefs" :key="pref.prefCode" class="row-2">
-          <label>
-            <input v-model="state.selectedPrefs[pref.prefCode]" type="checkbox" />
-            {{ pref.prefName }}
-          </label>
+      <div v-if="state.prefs.length > 0" class="card-inset">
+        <div class="label">
+          <h2>都道府県の選択</h2>
+          <p>グラフに表示する都道府県を選んでください</p>
+        </div>
+        <div class="grid-4">
+          <div v-for="pref in state.prefs" :key="pref.prefCode" class="row-2">
+            <label>
+              <input v-model="state.selectedPrefs[pref.prefCode]" type="checkbox" />
+              {{ pref.prefName }}
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -59,6 +72,8 @@ const state = reactive({
   prefs: <Prefecture[]>[],
   // 都道府県の選択状態（indexを都道府県コードとして、その値がtrueなら選択されている）
   selectedPrefs: <(boolean | undefined)[]>[],
+  // 選択された都道府県コードリスト
+  selectedPrefsCodes: <number[]>[],
 
   // 総人口、年少人口、生産年齢人口、老年人口のどれを表示するか
   mode: <'all' | 'child' | 'working' | 'old'>'all',
@@ -194,7 +209,7 @@ const getPrefAndInfo = () => {
 // ページアクセス時にRESAS APIからの情報取得を行う
 getPrefAndInfo();
 
-// 都道府県の選択変更時、グラフを変更
+// 都道府県・モードの選択変更時、グラフを変更
 watchEffect(() => {
   // 選択されている都道府県の都道府県コードのリストを作成
   let selectedPrefsCodes = <number[]>[];
@@ -204,6 +219,9 @@ watchEffect(() => {
       selectedPrefsCodes.push(prefCode);
     }
   });
+
+  // state に反映
+  state.selectedPrefsCodes = selectedPrefsCodes;
 
   // 都道府県コードリストをもとにhighcharts用データを生成
   // prefPopulationDataArray（ダウンロード済み都道府県情報）から選択された都道府県の情報を抽出
