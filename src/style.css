@@ -9,7 +9,7 @@ body {
 
 /* レスポンシブデザイン用のラッパー*/
 div.responsive-wrapper {
-  width: 100%;
+  width: calc(100% - 30px);
   max-width: 650px;
   margin: auto;
   padding: 10px 15px;
@@ -75,6 +75,7 @@ div.tabs div.tab {
   margin: 3px;
   border-radius: 8px;
   cursor: pointer;
+  transition-duration: 0.2s;
 }
 div.tabs div.tab:hover {
   background-color: #dadada;
@@ -83,6 +84,16 @@ div.tabs div.tab.is-selected {
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   cursor: default;
+}
+
+/*スマホ用デザイン*/
+@media screen and (max-width: 500px) {
+  div.grid-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+  div.tabs * {
+    font-size: 0.8em;
+  }
 }
 
 summary {
