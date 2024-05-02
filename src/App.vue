@@ -23,31 +23,7 @@
         </div>
       </div>
       <!--グラフ-->
-      <Chart
-        :size="{ width: chartState.width, height: 300 }"
-        :data="chartState.data"
-        :margin="chartState.margin"
-        :direction="chartState.direction"
-        :axis="chartState.axis"
-      >
-        <template #layers>
-          <Grid stroke-dasharray="2,2" />
-          <Line :data-keys="['name', 'pl']" />
-          <Line :data-keys="['name', 'avg']" :line-style="{ stroke: 'red' }" type="step" />
-        </template>
-
-        <template #widgets>
-          <Tooltip
-            border-color="#48CAE4"
-            :config="{
-              name: { hide: true },
-              pl: { color: '#0077b6' },
-              avg: { label: 'averange', color: 'red' },
-              inc: { hide: true },
-            }"
-          />
-        </template>
-      </Chart>
+      <Chart :options="chartState.charOptions"></Chart>
       <div class="label">
         <h2>都道府県の選択</h2>
         <p>グラフに表示する都道府県を選んでください</p>
@@ -68,12 +44,12 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { prefecture, prefPopulationAPIResponse, prefPopulationData } from './types';
-import { Chart, Grid, Line, Tooltip } from 'vue3-charts';
-import { ChartAxis, Direction } from 'vue3-charts/dist/types';
+import { Chart } from 'highcharts-vue';
+import * as Highcharts from 'highcharts';
 
-// APIキー
-// 事前にプロジェクトルートに .env.local ファイルを作成の上、RESAS_API_KEY="(APIキー)"の形式でAPIキーを設定しておくこと。
-const RESAS_API_KEY = import.meta.env.RESAS_API_KEY;
+// RESAS APIキー
+// ビルド前にプロジェクトルートに .env.local ファイルを作成の上、VITE_RESAS_API_KEY="(APIキー)"の形式でAPIキーを設定しておくこと。
+const RESAS_API_KEY = import.meta.env.VITE_RESAS_API_KEY;
 
 // 画面の状態
 const state = reactive({
@@ -92,42 +68,18 @@ const state = reactive({
 
 // グラフの状態
 const chartState = reactive({
-  width: 0,
-  data: [
-    { name: 'Jan', pl: 1000, avg: 500, inc: 300 },
-    { name: 'Feb', pl: 2000, avg: 900, inc: 400 },
-    { name: 'Apr', pl: 400, avg: 400, inc: 500 },
-    { name: 'Mar', pl: 3100, avg: 1300, inc: 700 },
-    { name: 'May', pl: 200, avg: 100, inc: 200 },
-    { name: 'Jun', pl: 600, avg: 400, inc: 300 },
-    { name: 'Jul', pl: 500, avg: 90, inc: 100 },
-  ],
-  direction: <Direction>'horizontal',
-  margin: {
-    left: 0,
-    top: 20,
-    right: 20,
-    bottom: 0,
-  },
-  axis: <ChartAxis>{
-    primary: {
-      type: 'band',
-    },
-    secondary: {
-      domain: ['dataMin', 'dataMax + 100'],
-      type: 'linear',
-      ticks: 8,
-    },
+  charOptions: <Highcharts.Options>{
+    series: [
+      {
+        name: 'A',
+        data: [1, 2, 3], // sample data
+      },
+    ],
   },
 });
 
-// 画面のサイズに合わせてグラフの横幅を設定する
-const adjustChartWidth = () => {
-  chartState.width = Math.min(650, window.innerWidth - 40);
-};
-adjustChartWidth();
-// 画面サイズが変わる度に設定
-window.addEventListener('resize', adjustChartWidth);
+// グラフの描画
+// sconst drawChart = () => {};
 
 // インデックスを都道府県コードとして、各都道府県のprefPopulationDataを格納
 let prefPopulationDataArray = <prefPopulationData[]>[];

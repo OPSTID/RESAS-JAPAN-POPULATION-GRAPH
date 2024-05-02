@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "highcharts-vue": "^2.0.1",
     "prettier": "^3.2.5",
-    "vue": "^3.4.21",
-    "vue3-charts": "^1.1.33"
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
