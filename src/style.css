@@ -7,6 +7,12 @@ body {
   user-select: none;
 }
 
+/* 文字揃え */
+/* 中央揃え */
+.text-center {
+  text-align: center;
+}
+
 /* レスポンシブデザイン用のラッパー*/
 div.responsive-wrapper {
   width: calc(100% - 30px);
@@ -18,39 +24,23 @@ div.responsive-wrapper {
 /* ラベル */
 div.label {
   display: inline-block;
+  margin: 10px 0px 5px 0px;
+  line-height: 0.5em;
+  font-size: 16pt;
 }
 div.label h1 {
-  font-size: 1.4em;
-  line-height: 0.8em;
+  font-size: 1em;
   font-weight: 900;
 }
 div.label h2 {
-  font-size: 1em;
-  line-height: 0.8em;
+  font-size: 0.8em;
 }
 div.label h3 {
-  font-size: 0.8em;
-  line-height: 0.8em;
+  font-size: 0.6em;
 }
 div.label p {
-  font-size: 0.8em;
+  font-size: 0.6em;
   opacity: 0.5;
-  line-height: 0.8em;
-}
-
-/*<details>を開いたときのアニメーション*/
-@keyframes slideIn {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0px);
-    opacity: 1;
-  }
-}
-details[open] > div {
-  animation: slideIn 0.3s;
 }
 
 /* グリッドシステムの実装 */
@@ -96,6 +86,41 @@ div.tabs div.tab.is-selected {
   }
 }
 
-summary {
-  cursor: pointer;
+/* チェックボックス */
+input[type='checkbox'] {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  vertical-align: -5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  vertical-align: -0.75em;
+  margin: 5px 0px;
+}
+input[type='checkbox']::after {
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  transform: rotate(50deg);
+  width: 4px;
+  height: 8px;
+  border-right: 2px dotted #ccc;
+  border-bottom: 2px dotted #ccc;
+  content: '';
+}
+input[type='checkbox']:checked {
+  background-color: #08c;
+  border: 1px solid #fff;
+}
+input[type='checkbox']:checked::after {
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+/*読込中アイコン*/
+.loading-icon {
+  margin-top: 50px;
+  width: 32px;
 }
