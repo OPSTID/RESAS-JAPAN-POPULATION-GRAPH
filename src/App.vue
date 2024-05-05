@@ -23,17 +23,21 @@
         </div>
       </div>
       <!--グラフ-->
-      <div v-if="state.selectedPrefsCodes.length > 0" class="card-inset">
-        <Chart :options="chartState.charOptions"></Chart>
-      </div>
-      <div v-else class="card-inset text-center">
-        <div class="label">
-          <h1>🤔</h1>
+      <div class="card-inset is-relative">
+        <!--都道府県が選択されているときはグラフを表示-->
+        <div>
+          <Chart :options="chartState.charOptions"></Chart>
         </div>
-        <br />
-        <div class="label">
-          <h2>都道府県を選択してください</h2>
-          <p>人口推移グラフを表示するには1つ以上の都道府県を選択する必要があります</p>
+        <!--都道府県が1つも選択されていなければ、メッセージを表示-->
+        <div v-if="state.selectedPrefsCodes.length === 0" class="text-center is-absolute-center" style="height: 10em; padding: 10px">
+          <div class="label">
+            <h1>🤔</h1>
+          </div>
+          <br />
+          <div class="label">
+            <h2>都道府県を選択してください</h2>
+            <p>人口推移グラフを表示するには1つ以上の都道府県を選択する必要があります</p>
+          </div>
         </div>
       </div>
       <!--都道府県の選択-->

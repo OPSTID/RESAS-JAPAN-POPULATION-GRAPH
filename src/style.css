@@ -149,3 +149,16 @@ input[type='checkbox']:checked::after {
 .main {
   animation: slideIn 0.3s;
 }
+
+/* 要素の配置関係 */
+.is-relative {
+  position: relative;
+}
+.is-absolute-center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
