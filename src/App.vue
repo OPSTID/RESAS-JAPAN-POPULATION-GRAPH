@@ -26,7 +26,7 @@
       <div class="card-inset is-relative">
         <!--都道府県が選択されているときはグラフを表示-->
         <div>
-          <Chart :options="chartState.charOptions"></Chart>
+          <Chart :options="chartState.charOptions" :style="{ opacity: state.selectedPrefsCodes.length === 0 ? 0.2 : 1 }"></Chart>
         </div>
         <!--都道府県が1つも選択されていなければ、メッセージを表示-->
         <div v-if="state.selectedPrefsCodes.length === 0" class="text-center is-absolute-center" style="height: 10em; padding: 10px">
@@ -88,6 +88,23 @@ const chartState = reactive({
   charOptions: <Highcharts.Options>{
     title: {
       text: '人口推移',
+    },
+    yAxis: {
+      title: {
+        text: '人口（人）',
+      },
+      labels: {
+        // コンマ区切りで人口を表示
+        format: '{value:,.0f}',
+      },
+    },
+    xAxis: {
+      title: {
+        text: '年',
+      },
+    },
+    accessibility: {
+      description: `RESAS APIから取得した情報をもとに表示しています。\n© Cabinet Office,Government Of Japan. All Rights Reserved.`,
     },
     series: [
       // 型定義に使用するため、サンプルデータを定義
@@ -239,10 +256,10 @@ watchEffect(() => {
   // グラフを初期化
   chartState.charOptions.series = [];
   selectedPrefsDataArray.forEach((pref) => {
-    if (!!pref.data[state.mode] && pref.data[state.mode].length > 0) {
+    if (!!pref.data[state.mode] && pref.data[state.mode]!.length > 0) {
       // [0]: 年、[1]: 人口数とした座標 の配列を作成
       let xys = <number[][]>[];
-      pref.data[state.mode].forEach((yearValue) => {
+      pref.data[state.mode]!.forEach((yearValue) => {
         xys.push([yearValue.year, yearValue.value]);
       });
       // グラフに追加
