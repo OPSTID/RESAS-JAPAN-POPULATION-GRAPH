@@ -14,10 +14,10 @@ export type PrefPopulationData = {
   prefCode: number; // 都道府県コード
   prefName: string; // 都道府県名
   data: {
-    all: YearValue[]; // 総人口
-    child: YearValue[]; // 年少人口
-    working: YearValue[]; // 生産年齢人口
-    old: YearValue[]; // 老年人口
+    all?: YearValue[]; // 総人口
+    child?: YearValue[]; // 年少人口
+    working?: YearValue[]; // 生産年齢人口
+    old?: YearValue[]; // 老年人口
   };
 };
 // 人口構成APIのレスポンス（RESAS API準拠）
