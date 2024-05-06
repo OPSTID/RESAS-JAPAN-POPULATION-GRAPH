@@ -3,6 +3,7 @@ import App from './App.vue';
 describe('<App />', () => {
   it('renders', () => {
     // see: https://on.cypress.io/mounting-vue
+    // @ts-ignore
     cy.mount(App);
 
     // DL_Sのテスト
