@@ -8,6 +8,7 @@ describe('<App />', () => {
 
     // DL_Sのテスト
     // RESAS APIからのデータのダウンロードが完了するまで待つ（5秒）
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(5000);
 
     // ページの1つめの<label>が北海道であることを確認する
