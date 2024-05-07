@@ -28,6 +28,7 @@ const getPrefs = async () => {
       ) {
         location.reload();
       }
+      return [];
     }
   } catch (e) {
     // RESAS APIのサーバーに接続できないとき
@@ -35,6 +36,7 @@ const getPrefs = async () => {
     if (confirm('RESAS APIのサーバーに接続できません。ページをリロードしますか？(DL_E1_1)')) {
       location.reload();
     }
+    return [];
   }
 };
 
@@ -111,9 +113,9 @@ const getPrefsPopulation = async (prefs: Prefecture[]) => {
     if (confirm('RESAS APIのサーバーに接続できません。ページをリロードしますか？(DL_E1_2)')) {
       location.reload();
     }
+    return [];
   }
 };
-
 export default {
   getPrefs,
   getPrefsPopulation,
