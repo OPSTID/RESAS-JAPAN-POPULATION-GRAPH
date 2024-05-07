@@ -26,7 +26,13 @@
       <div class="card-inset is-relative">
         <!--都道府県が選択されているときはグラフを表示-->
         <div>
-          <Chart :options="chartState.charOptions" :style="{ opacity: state.selectedPrefsCodes.length === 0 ? 0.2 : 1 }"></Chart>
+          <Chart
+            :options="chartState.charOptions"
+            :style="{
+              opacity: state.selectedPrefsCodes.length === 0 ? 0.2 : 1,
+              filter: state.selectedPrefsCodes.length === 0 ? 'blur(2px)' : 'none',
+            }"
+          ></Chart>
         </div>
         <!--都道府県が1つも選択されていなければ、メッセージを表示-->
         <div v-if="state.selectedPrefsCodes.length === 0" class="text-center is-absolute-center" style="height: 10em; padding: 10px">
@@ -53,6 +59,14 @@
               {{ pref.prefName }}
             </label>
           </div>
+        </div>
+      </div>
+      <div class="card-inset">
+        <div class="label">
+          <p>
+            <a href="https://opendata.resas-portal.go.jp/" target="_blank">RESAS API</a> から取得した情報をもとに表示しています。<br />著作権表示: ©
+            Cabinet Office,Government Of Japan. All Rights Reserved.
+          </p>
         </div>
       </div>
     </div>
@@ -102,9 +116,6 @@ const chartState = reactive({
       title: {
         text: '年',
       },
-    },
-    accessibility: {
-      description: `RESAS APIから取得した情報をもとに表示しています。\n© Cabinet Office,Government Of Japan. All Rights Reserved.`,
     },
     series: [
       // 型定義に使用するため、サンプルデータを定義

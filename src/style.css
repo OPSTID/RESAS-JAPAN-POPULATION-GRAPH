@@ -24,7 +24,7 @@ div.responsive-wrapper {
 /* ラベル */
 div.label {
   display: inline-block;
-  margin: 10px 0px 5px 0px;
+  margin: 10px 0px;
   font-size: 16pt;
 }
 div.label * {
@@ -82,7 +82,7 @@ div.tabs div.tab.is-selected {
 /* 白角丸カード */
 .card-inset {
   background-color: #fff;
-  padding: 0px 20px;
+  padding: 8px 20px;
   border-radius: 10px;
   margin-bottom: 20px;
 }
@@ -97,7 +97,10 @@ div.tabs div.tab.is-selected {
   }
 }
 
-/* チェックボックス */
+/* チェックボックス関連 */
+label {
+  cursor: pointer;
+}
 input[type='checkbox'] {
   position: relative;
   width: 24px;
@@ -110,6 +113,8 @@ input[type='checkbox'] {
   appearance: none;
   vertical-align: -0.75em;
   margin: 5px 0px;
+  cursor: pointer;
+  transition-duration: 0.3s;
 }
 input[type='checkbox']::after {
   position: absolute;
@@ -118,13 +123,14 @@ input[type='checkbox']::after {
   transform: rotate(40deg);
   width: 4px;
   height: 9px;
-  border-right: 2px dotted #ccc;
-  border-bottom: 2px dotted #ccc;
+  border-right: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
   content: '';
 }
 input[type='checkbox']:checked {
   background-color: #08c;
   border: 1px solid #fff;
+  transform: scale(1.25);
 }
 input[type='checkbox']:checked::after {
   border-right: 2px solid #fff;
