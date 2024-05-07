@@ -67,6 +67,7 @@
             <a href="https://opendata.resas-portal.go.jp/" target="_blank">RESAS API</a> から取得した情報をもとに表示しています。<br />著作権表示: ©
             Cabinet Office,Government Of Japan. All Rights Reserved.
           </p>
+          <p><a href="javascript:void(0)" @click="getPrefAndInfo()">データの再取得</a></p>
         </div>
       </div>
     </div>
@@ -74,13 +75,11 @@
 </template>
 <script setup lang="ts">
 import { reactive, watchEffect } from 'vue';
-import { Prefecture, PrefPopulationAPIResponse, PrefPopulationData } from './types';
 import { Chart } from 'highcharts-vue';
 import * as Highcharts from 'highcharts';
 
-// RESAS APIキー
-// ビルド前にプロジェクトルートに .env.local ファイルを作成の上、VITE_RESAS_API_KEY="(APIキー)"の形式でAPIキーを設定しておくこと。
-const RESAS_API_KEY = import.meta.env.VITE_RESAS_API_KEY;
+import { Prefecture, PrefPopulationData } from './types';
+import resasAPI from './resas-api';
 
 // 画面の状態
 const state = reactive({
@@ -132,112 +131,26 @@ const chartState = reactive({
 });
 
 // インデックスを都道府県コードとして、各都道府県のprefPopulationDataを格納
-let prefPopulationDataArray = <PrefPopulationData[]>[];
+let prefPopulationDatas = <PrefPopulationData[]>[];
 
 // 都道府県一覧、各都道府県の人口構成をRESAS APIから取得
-const getPrefAndInfo = () => {
+const getPrefAndInfo = async () => {
   // 読込中にする
   state.isLoading = true;
   // 都道府県一覧を取得
-  fetch('https://opendata.resas-portal.go.jp/api/v1/prefectures', {
-    headers: {
-      'X-API-KEY': RESAS_API_KEY,
-    },
-  })
-    .then(async (res) => {
-      // 都道府県一覧を反映
-      // 正常に受信できたとき
-      if (res.ok) {
-        state.prefs = <Prefecture[]>(await res.json()).result;
-        // 都道府県の選択状態を初期化する
-        for (let i = 1; i <= state.prefs.length; i++) {
-          state.selectedPrefs[i] = false;
-        }
+  state.prefs = await resasAPI.getPrefs();
 
-        // 各都道府県の人口構成を取得する
-        // prefPopulationDataArray を初期化
-        prefPopulationDataArray = [];
-        state.prefs.forEach((pref) => {
-          fetch(`https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=${pref.prefCode}&cityCode=-`, {
-            headers: {
-              'X-API-KEY': RESAS_API_KEY,
-            },
-          })
-            .then(async (res) => {
-              if (res.ok) {
-                const prefPopulationAPIResult = <PrefPopulationAPIResponse>await res.json();
+  // 都道府県が正しく取得できているとき
+  if (state.prefs.length > 0) {
+    // 都道府県の選択状態を初期化する
+    for (let i = 1; i <= state.prefs.length; i++) {
+      state.selectedPrefs[i] = false;
+    }
 
-                // APIから取得したデータをもとに、人口構成データを作成する
-                // 作成するデータ
-                let populationData = <PrefPopulationData['data']>{
-                  all: [],
-                  child: [],
-                  working: [],
-                  old: [],
-                };
-                // 総人口、年少人口、生産年齢人口、老年人口をdata.labelをもとにして判別。
-                // populationData に反映する。
-
-                // APIから正しい形式でデータを取得できているかを確認
-                if (!!prefPopulationAPIResult.result && !!prefPopulationAPIResult.result.data) {
-                  prefPopulationAPIResult.result.data.forEach((data) => {
-                    switch (data.label) {
-                      case '総人口':
-                        populationData.all = data.data;
-                        break;
-                      case '年少人口':
-                        populationData.child = data.data;
-                        break;
-                      case '生産年齢人口':
-                        populationData.working = data.data;
-                        break;
-                      case '老年人口':
-                        populationData.old = data.data;
-                        break;
-                    }
-                  });
-
-                  // 保存
-                  prefPopulationDataArray[pref.prefCode] = {
-                    prefName: pref.prefName,
-                    prefCode: pref.prefCode,
-                    data: populationData,
-                  };
-
-                  // 47都道府県すべてのデータが揃ったら、都道府県コードを昇順に並べ替えたあと、読み込み終了
-                  let prefCount = prefPopulationDataArray.filter((pref) => {
-                    return !!pref && !!pref.data;
-                  }).length;
-                  if (prefCount === state.prefs.length) {
-                    // 都道府県コードで並べ替える
-                    prefPopulationDataArray = prefPopulationDataArray.sort((prev, next) => {
-                      return prev.prefCode - next.prefCode;
-                    });
-
-                    state.isLoading = false;
-                  }
-                } else {
-                  alert('APIからの応答が正しい形式でないため処理できなくなりました。ページをリロードすると解決する場合があります。');
-                }
-              } else {
-                alert('RESAS APIから情報を取得できません。ページをリロードしてください。(DL_E2_2)');
-              }
-            })
-            .catch(() => {
-              alert('RESAS APIのサーバーに接続できません。ページをリロードしてください。(DL_E1_2)');
-            });
-        });
-      } else {
-        // 500エラーなどが発生したとき
-        alert('RESAS APIから情報を取得できません。ページをリロードしてください。(DL_E2_1)');
-        // 処理を終了
-        return;
-      }
-    })
-    .catch(() => {
-      // RESAS APIのサーバーに接続できないとき
-      alert('RESAS APIのサーバーに接続できません。ページをリロードしてください。(DL_E1_1)');
-    });
+    // 各都道府県の人口構成を取得
+    prefPopulationDatas = await resasAPI.getPrefsPopulation(state.prefs);
+    state.isLoading = false;
+  }
 };
 
 // ページアクセス時にRESAS APIからの情報取得を行う
@@ -258,15 +171,15 @@ watchEffect(() => {
   state.selectedPrefsCodes = selectedPrefsCodes;
 
   // 都道府県コードリストをもとにhighcharts用データを生成
-  // prefPopulationDataArray（ダウンロード済み都道府県情報）から選択された都道府県の情報を抽出
-  // 選択された都道府県の情報
-  let selectedPrefsDataArray = prefPopulationDataArray.filter((pref) => {
+  // prefPopulationDatas（ダウンロード済み都道府県情報）から選択された都道府県の情報を抽出
+  let selectedPrefsPopulationDatas = prefPopulationDatas.filter((pref) => {
     return selectedPrefsCodes.indexOf(pref.prefCode) !== -1;
   });
 
   // グラフを初期化
   chartState.charOptions.series = [];
-  selectedPrefsDataArray.forEach((pref) => {
+  // グラフ用データの生成
+  selectedPrefsPopulationDatas.forEach((pref) => {
     if (!!pref.data[state.mode] && pref.data[state.mode]!.length > 0) {
       // [0]: 年、[1]: 人口数とした座標 の配列を作成
       let xys = <number[][]>[];
