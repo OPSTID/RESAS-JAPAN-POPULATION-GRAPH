@@ -79,7 +79,7 @@ import { Chart } from 'highcharts-vue';
 import * as Highcharts from 'highcharts';
 
 import { Prefecture, PrefPopulationData } from './types';
-import resasAPI from './resas-api';
+import { getPrefs, getPrefsPopulation } from './resas-api';
 
 // 画面の状態
 const state = reactive({
@@ -138,7 +138,7 @@ const getPrefAndInfo = async () => {
   // 読込中にする
   state.isLoading = true;
   // 都道府県一覧を取得
-  state.prefs = await resasAPI.getPrefs();
+  state.prefs = await getPrefs();
 
   // 都道府県が正しく取得できているとき
   if (state.prefs.length > 0) {
@@ -148,8 +148,11 @@ const getPrefAndInfo = async () => {
     }
 
     // 各都道府県の人口構成を取得
-    prefPopulationDatas = await resasAPI.getPrefsPopulation(state.prefs);
-    state.isLoading = false;
+    prefPopulationDatas = await getPrefsPopulation(state.prefs);
+    // 各都道府県の人口構成を正しく取得できれば、ローディング表示を終了
+    if (prefPopulationDatas.length === 48) {
+      state.isLoading = false;
+    }
   }
 };
 
