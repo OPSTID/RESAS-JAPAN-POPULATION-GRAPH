@@ -2,56 +2,52 @@
   <div class="responsive-wrapper">
     <!--ページタイトル-->
     <div class="text-center">
-      <div class="label">
+      <v-label>
         <h1>Japan Population Charts</h1>
         <p>都道府県を人口で比較してみよう</p>
-      </div>
+      </v-label>
     </div>
     <!--読込中-->
-    <div v-if="state.isLoading" class="text-center"><img src="/loading.svg" class="loading-icon" /> <br />データを取得中</div>
+    <v-loading v-if="state.isLoading" />
     <div v-else class="main">
       <!--表示モード選択-->
-      <div class="tabs">
-        <div
+      <v-tabs>
+        <v-tab
           v-for="(modeName, mode) in { all: '総人口', child: '年少人口', working: '生産年齢人口', old: '老年人口' }"
           :key="mode"
-          class="tab"
-          :class="{ 'is-selected': state.mode === mode }"
+          :is-selected="state.mode === mode"
           @click="state.mode = mode"
         >
           {{ modeName }}
-        </div>
-      </div>
+        </v-tab>
+      </v-tabs>
       <!--グラフ-->
-      <div class="card-inset is-relative">
-        <!--都道府県が選択されているときはグラフを表示-->
-        <div>
-          <Chart
-            :options="chartState.charOptions"
-            :style="{
-              opacity: state.selectedPrefsCodes.length === 0 ? 0.2 : 1,
-              filter: state.selectedPrefsCodes.length === 0 ? 'blur(2px)' : 'none',
-            }"
-          ></Chart>
-        </div>
+      <v-card-inset class="is-relative">
+        <!--グラフ表示-->
+        <Chart
+          :options="chartState.charOptions"
+          :style="{
+            opacity: state.selectedPrefsCodes.length === 0 ? 0.2 : 1,
+            filter: state.selectedPrefsCodes.length === 0 ? 'blur(2px)' : 'none',
+          }"
+        ></Chart>
         <!--都道府県が1つも選択されていなければ、メッセージを表示-->
         <div v-if="state.selectedPrefsCodes.length === 0" class="text-center is-absolute-center" style="height: 10em; padding: 10px">
-          <div class="label">
+          <v-label>
             <h1>🤔</h1>
-          </div>
+          </v-label>
           <br />
-          <div class="label">
+          <v-label>
             <h2>都道府県を選択してください</h2>
             <p>人口推移グラフを表示するには1つ以上の都道府県を選択する必要があります</p>
-          </div>
+          </v-label>
         </div>
-      </div>
-      <!--都道府県の選択-->
-      <div v-if="state.prefs.length > 0" class="card-inset">
-        <div class="label">
+      </v-card-inset>
+      <v-card-inset v-if="state.prefs.length > 0">
+        <v-label>
           <h2>都道府県の選択</h2>
           <p>グラフに表示する都道府県を選んでください</p>
-        </div>
+        </v-label>
         <div class="grid-4">
           <div v-for="pref in state.prefs" :key="pref.prefCode" class="row-2">
             <label>
@@ -60,16 +56,16 @@
             </label>
           </div>
         </div>
-      </div>
-      <div class="card-inset">
-        <div class="label">
+      </v-card-inset>
+      <v-card-inset>
+        <v-label>
           <p>
             <a href="https://opendata.resas-portal.go.jp/" target="_blank">RESAS API</a> から取得した情報をもとに表示しています。<br />著作権表示: ©
             Cabinet Office,Government Of Japan. All Rights Reserved.
           </p>
           <p><a href="javascript:void(0)" @click="getPrefAndInfo()">データの再取得</a></p>
-        </div>
-      </div>
+        </v-label>
+      </v-card-inset>
     </div>
   </div>
 </template>
@@ -80,6 +76,12 @@ import * as Highcharts from 'highcharts';
 
 import { Prefecture, PrefPopulationData } from './types';
 import { getPrefs, getPrefsPopulation } from './resas-api';
+
+import vLoading from './components/v-loading.vue';
+import vCardInset from './components/v-card-inset.vue';
+import vLabel from './components/v-label.vue';
+import vTabs from './components/v-tabs.vue';
+import vTab from './components/v-tab.vue';
 
 // 画面の状態
 const state = reactive({
