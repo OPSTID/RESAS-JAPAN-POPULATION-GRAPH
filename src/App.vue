@@ -1,15 +1,15 @@
 <template>
   <div class="responsive-wrapper">
     <!--ページタイトル-->
-    <div class="text-center">
+    <header class="text-center">
       <v-label>
         <h1>Japan Population Charts</h1>
         <p>都道府県を人口で比較してみよう</p>
       </v-label>
-    </div>
+    </header>
     <!--読込中-->
     <v-loading v-if="state.isLoading" />
-    <div v-else class="main">
+    <main v-else class="main">
       <!--表示モード選択-->
       <v-tabs>
         <v-tab
@@ -24,15 +24,9 @@
       <!--グラフ-->
       <v-card-inset class="is-relative">
         <!--グラフ表示-->
-        <Chart
-          :options="chartState.charOptions"
-          :style="{
-            opacity: state.selectedPrefsCodes.length === 0 ? 0.2 : 1,
-            filter: state.selectedPrefsCodes.length === 0 ? 'blur(2px)' : 'none',
-          }"
-        ></Chart>
+        <Chart :options="chartState.charOptions" class="highchart-body" :class="{ 'has-no-data': state.selectedPrefsCodes.length === 0 }"></Chart>
         <!--都道府県が1つも選択されていなければ、メッセージを表示-->
-        <div v-if="state.selectedPrefsCodes.length === 0" class="text-center is-absolute-center" style="height: 10em; padding: 10px">
+        <article v-if="state.selectedPrefsCodes.length === 0" class="text-center is-absolute-center">
           <v-label>
             <h1>🤔</h1>
           </v-label>
@@ -41,21 +35,21 @@
             <h2>都道府県を選択してください</h2>
             <p>人口推移グラフを表示するには1つ以上の都道府県を選択する必要があります</p>
           </v-label>
-        </div>
+        </article>
       </v-card-inset>
       <v-card-inset v-if="state.prefs.length > 0">
         <v-label>
           <h2>都道府県の選択</h2>
           <p>グラフに表示する都道府県を選んでください</p>
         </v-label>
-        <div class="grid-4">
+        <section class="grid-4">
           <div v-for="pref in state.prefs" :key="pref.prefCode" class="row-2">
             <label>
               <input v-model="state.selectedPrefs[pref.prefCode]" type="checkbox" />
               {{ pref.prefName }}
             </label>
           </div>
-        </div>
+        </section>
       </v-card-inset>
       <v-card-inset>
         <v-label>
@@ -66,7 +60,7 @@
           <p><a href="javascript:void(0)" @click="getPrefAndInfo()">データの再取得</a></p>
         </v-label>
       </v-card-inset>
-    </div>
+    </main>
   </div>
 </template>
 <script setup lang="ts">

@@ -47,7 +47,7 @@ div.label p {
 }
 
 /* グリッドシステムの実装 */
-div.grid-4 {
+.grid-4 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
@@ -89,7 +89,7 @@ div.tabs div.tab.is-selected {
 
 /*スマホ用デザイン*/
 @media screen and (max-width: 500px) {
-  div.grid-4 {
+  .grid-4 {
     grid-template-columns: 1fr 1fr;
   }
   div.tabs * {
@@ -156,6 +156,12 @@ input[type='checkbox']:checked::after {
   animation: slideIn 0.3s;
 }
 
+/* highchart */
+.highchart-body.has-no-data {
+  opacity: 0.2;
+  filter: blur(2px);
+}
+
 /* 要素の配置関係 */
 .is-relative {
   position: relative;
@@ -167,4 +173,7 @@ input[type='checkbox']:checked::after {
   right: 0;
   bottom: 0;
   margin: auto;
+
+  height: 10em;
+  padding: 10px;
 }
