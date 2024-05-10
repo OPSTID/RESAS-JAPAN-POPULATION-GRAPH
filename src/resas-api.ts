@@ -6,7 +6,10 @@
 import { PrefPopulationAPIResponse, PrefPopulationData, Prefecture } from './types';
 
 // RESAS APIキーを環境変数から取得
-const RESAS_API_KEY = <string>import.meta.env.VITE_RESAS_API_KEY;
+const RESAS_API_KEY = <string | undefined>import.meta.env.VITE_RESAS_API_KEY;
+if (RESAS_API_KEY === undefined) {
+  throw new Error("Please create '.env.local' file correctly in project root. See README.md for more details.");
+}
 
 // 都道府県一覧を取得
 export const getPrefs = async () => {
