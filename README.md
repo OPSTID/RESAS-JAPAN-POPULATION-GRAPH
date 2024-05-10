@@ -12,66 +12,56 @@ RESAS APIを用いて都道府県別の総人口推移グラフを表示するWe
 
 2. `npm run dev` でデバッグ環境で実行できます。
 3. `npm run test` でテストを実行できます。
-4. `npx cypress open` でCypressによる動作テストができます。
+4. `npm run cypress` でCypressによる動作テストができます。
 5. `npm run build` でアプリをビルドできます。
 
 ## ディレクトリ構造（抜粋）
 
 - **cypress**
   Cypress の設定関連ファイル
-  
 - **docs**
   GitHub Pages で公開する、ビルド済みアプリケーション
-  
 - **public**
   - _loading.svg_
     読み込み中アニメーション画像
-  
 - **src**
+
   - **components**
     各コンポーネントの保存場所
-    
-    - *v-card-inset.vue*
+
+    - _v-card-inset.vue_
       角丸四角のカード
-    
-    - *v-label.vue*
+    - _v-label.vue_
       `<h1>` `<h2>` `<h3>` `<p>` の4つのタグを用いてテキストの基本的な見た目を設定できるコンポーネント。
-    
+
       - `<h1>` `<h2>` `<h3>`
-    
+
         太字として表示されます。
         `<h1>` を 基準点（`font-size:1em`） として、数字を大きくするにつれフォントサイズが小さくなります。
-    
+
       - `<p>`
         `<h3>` と同じサイズの、灰色文字として表示されます。
-    
-    - *v-tabs.vue*、*v-tab.vue*
+
+    - _v-tabs.vue_、_v-tab.vue_
       タブのコンポーネント。`<v-tabs>` の中に `<v-tab>（表示する文字）</v-tab>` を列挙することでタブを作成することが可能です。`<v-tab>` の `:is-selected` を `true` にすると、そのタブが選択されている表示になります。
-    
     - `v-loading.vue`
       RESAS APIからデータを取得中に表示するローディング表示のコンポーネントです。
-    
+
   - _App.cy.ts_
     Cypress のテストコード
-  
   - _App.vue_
     アプリメイン画面コンポーネント
-  
   - _main.ts_
     アプリメインスクリプト
-  
   - _resas-api.ts_
     RESAS APIからの情報取得関連のスクリプト
-  
   - _resas-api.test.ts_
     `resas-api.ts` のテストコード
-  
   - _shims.d.ts_
     `.vue` ファイルの型定義ファイル
-  
   - _style.css_
     メインスタイルシート
-  
+
 - _.eslintrc_、_eslint.config.js_
 
 - _.prettierrc.cjs_
